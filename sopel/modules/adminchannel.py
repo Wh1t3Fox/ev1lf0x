@@ -274,3 +274,29 @@ def show_mask(bot, trigger):
     mask = bot.db.get_channel_value(trigger.sender, 'topic_mask')
     mask = mask or default_mask(trigger)
     bot.say(mask)
+
+
+@require_chanmsg
+@require_privilege(OP, 'You are not a channel operator.')
+@commands('invite')
+@priority('high')
+def invite(bot, trigger):
+    """
+    Invite a user to the channel.
+    """
+    if bot.privileges[trigger.sender][bot.nick] < HALFOP:
+        return bot.reply("I'm not a channel operator!")
+    text = trigger.group().split()
+    argc = len(text)
+    if argc < 2:
+        return
+    opt = Identifier(text[1])
+    nick = opt
+    channel = trigger.sender
+    if not opt.is_nick():
+        nick = text[2]
+        channel = opt
+    invitemask = '$a:'+nick
+    bot.write(['MODE', channel, '+I' ,invitemask])
+    bot.write(['MSG', 'ChanServ', 'flags', channel, nick, '+i'])
+    bot.write(['INVITE', nick])
