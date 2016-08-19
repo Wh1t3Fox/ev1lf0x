@@ -36,7 +36,7 @@ def configure(config):
 def setup(bot):
     bot.config.define_section('ctf', CTFSection)
 
-@require_privilege(VOICE, 'You do not have access.')
+@sopel.module.require_privilege(VOICE, 'You do not have access.')
 @sopel.module.require_chanmsg("This only works in channel")
 @sopel.module.commands('get')
 @sopel.module.example('.get passwd')
