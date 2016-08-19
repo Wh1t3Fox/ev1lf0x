@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals, absolute_import, print_function, division
-
+from sopel.module import VOICE
 from sopel.config.types import (
     StaticSection, ValidatedAttribute, FilenameAttribute
 )
@@ -36,8 +36,8 @@ def configure(config):
 def setup(bot):
     bot.config.define_section('ctf', CTFSection)
 
-
-@sopel.module.require_privmsg("This command only works as a private message.")
+@require_privilege(VOICE, 'You do not have access.')
+@sopel.module.require_chanmsg("This only works in channel")
 @sopel.module.commands('get')
 @sopel.module.example('.get passwd')
 def get_ctf(bot, trigger):
