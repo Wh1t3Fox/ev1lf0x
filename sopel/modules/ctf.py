@@ -35,3 +35,43 @@ def configure(config):
 
 def setup(bot):
     bot.config.define_section('ctf', CTFSection)
+
+
+@sopel.module.require_privmsg("This command only works as a private message.")
+@sopel.module.commands('get')
+@sopel.module.example('.get passwd')
+def get_ctf(bot, trigger):
+    """See the CTF Login Information
+    Params:
+        uname
+        email
+        passwd
+        teamid
+    """
+    section = 'ctf'
+
+    # Get section and option from first argument.
+    arg1 = trigger.group(3).split('.')
+    if len(arg1) == 1:
+        section_name, option = "ctf", arg1[0]
+    else:
+        bot.reply("Usage: .get option")
+        return
+
+    section = getattr(bot.config, section_name)
+    static_sec = isinstance(section, StaticSection)
+
+    if static_sec and not hasattr(section, option):
+        bot.say('[{}] section has no option {}.'.format(section_name, option))
+        return
+
+    # Display current value if no value is given.
+    value = trigger.group(4)
+    if not value:
+        if not static_sec and bot.config.parser.has_option(section, option):
+            bot.reply("%s does not exist." % (option))
+            return
+
+        value = getattr(section, option)
+        bot.reply("%s = %s" % (option, value))
+        return
