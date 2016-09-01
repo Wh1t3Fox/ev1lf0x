@@ -298,5 +298,5 @@ def invite(bot, trigger):
         channel = opt
     invitemask = '$a:'+nick
     bot.write(['MODE', channel, '+I' ,invitemask])
-    bot.write(['MSG', 'ChanServ', 'flags', channel, nick, '+i'])
+    bot.msg('ChanServ', 'flags {0} {1} +iV'.format(channel, nick))
     bot.write(['INVITE', nick])
