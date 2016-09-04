@@ -73,5 +73,5 @@ def get_ctf(bot, trigger):
             return
 
         value = getattr(section, option)
-        bot.reply("%s" % (value))
+        bot.reply(value)
         return
